@@ -130,6 +130,7 @@ void DSP_Init()
 
 	Init_Interrupts();
    	Init_I2C();
+   	Init_UART2(9600);
    	if(!Init_AIC3106(SampleRateSetting)) {
    		while(1);	// stall on codec init failure
 	}

@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs910/ccs/tools/compiler/C6000 Code Generation Tools 7.3.1
+CG_TOOL_ROOT := C:/Program Files (x86)/Texas Instruments/C6000 Code Generation Tools 7.3.1
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -137,7 +137,7 @@ all: fir_float_AIC3106.out
 fir_float_AIC3106.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C6000 Linker'
-	"C:/ti/ccs910/ccs/tools/compiler/C6000 Code Generation Tools 7.3.1/bin/cl6x" -mv6740 -g --display_error_number --diag_warning=225 --abi=coffabi -z -m"fir_float_AIC3106.map" --warn_sections -i"C:/ti/ccs910/ccs/tools/compiler/C6000 Code Generation Tools 7.3.1/lib" -i"C:/ti/ccs910/ccs/tools/compiler/C6000 Code Generation Tools 7.3.1/include" --reread_libs --xml_link_info="fir_float_AIC3106_linkInfo.xml" --rom_model -o "fir_float_AIC3106.out" $(ORDERED_OBJS)
+	"C:/Program Files (x86)/Texas Instruments/C6000 Code Generation Tools 7.3.1/bin/cl6x" -mv6740 -g --display_error_number --diag_warning=225 --abi=coffabi -z -m"fir_float_AIC3106.map" --warn_sections -i"C:/Program Files (x86)/Texas Instruments/C6000 Code Generation Tools 7.3.1/lib" -i"C:/Program Files (x86)/Texas Instruments/C6000 Code Generation Tools 7.3.1/include" --reread_libs --xml_link_info="fir_float_AIC3106_linkInfo.xml" --rom_model -o "fir_float_AIC3106.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 

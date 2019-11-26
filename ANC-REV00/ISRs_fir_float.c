@@ -30,12 +30,16 @@ volatile union {
 
 // LMS filter parameters
 #define beta 1e-9        // learning rate
-#define alpha 0.7        // leakage factor (leaky LMS algorithm)
-#define N 20
+#define alpha 0.5        // leakage factor (leaky LMS algorithm)
+#define N 30
 
+float track_result;         //tracks result in Expressions tab
+float track_result_short;   //tracks result converted to short in Expressions tab
+float result = 0;           //accumulator
 float w[N];                 //weights of adapt filter
 float x_R_buffer[N];        //buffer for reference signal delay samples
 float x_E_buffer[N];        //buffer for error signal delay samples
+//float G = 0.3;            //attenuates the added components in result
 
 // USB UART communication variables
 int data_flag = 0;          //UART data received flag
@@ -62,7 +66,7 @@ interrupt void Codec_ISR()
 	if(data_flag != 0){
 	    data = Read_UART2();        // reads UART data (either 'a' or 'p')
 	}
-	float result = 0; //initialize the accumulator
+	result = 0; //initialize the accumulator
 
  	if(CheckForOverrun())	// overrun error occurred (i.e. halted DSP)
 		return;				// so serial port is reset to recover
@@ -92,12 +96,15 @@ interrupt void Codec_ISR()
 	else if(data == 'o'){
 	    result = 0.0;
 	}
+    track_result = result;
+    track_result_short = (short) result;
 
 	//Return 16-bit sample to DAC
 	CodecDataOut.Channel[LEFT] = (short) result;
 	CodecDataOut.Channel[RIGHT] = 0;
 
 	WriteCodecData(CodecDataOut.UINT);		// send output data to  port
+
 
 //	WriteDigitalOutputs(0); // Write to GPIO J15, pin 6; end ISR timing pulse
 }

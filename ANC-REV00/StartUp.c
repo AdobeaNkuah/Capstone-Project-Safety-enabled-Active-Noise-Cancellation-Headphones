@@ -10,7 +10,7 @@
 
 #include "DSP_Config.h"
 
-#define N 20            //# of weights (coefficients)
+#define N 30            //# of weights (coefficients)
 extern float w[N];      //weights for adapt filter
 extern float x_R_buffer[N];  //reference signal buffer
 extern float x_E_buffer[N];  //error signal buffer

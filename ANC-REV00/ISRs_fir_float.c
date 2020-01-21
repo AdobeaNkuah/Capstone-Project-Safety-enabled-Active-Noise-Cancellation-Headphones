@@ -11,7 +11,7 @@
 ///////////////////////////////////////////////////////////////////////
 
 #include "DSP_Config.h"
-
+#include <stdio.h>
 // Function Prototypes
 long int rand_int(void);
   
@@ -29,17 +29,23 @@ volatile union {
 } CodecDataIn, CodecDataOut;
 
 // LMS filter parameters
-#define beta 1e-9        // learning rate
-#define alpha 0.7        // leakage factor (leaky LMS algorithm)
-#define N 20
+
+#define alpha 1        // leakage factor (leaky LMS algorithm)
+#define N 80
+float beta = 1e-9;        // learning rate
 
 /* add any global variables here */
-float x_R_buffer[N];       //buffer for reference signal delay samples
 float x_E_buffer[N];       //buffer for error signal delay samples
-int data_flag = 0;         //UART data received flag
-char data = 0;              //keyboard data (a = ANC mode) or (p = passthrough mode)
+float x_test_buffer[N];       //buffer for test signal delay samples
 
-float w[N] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};             //buffer weights of adapt filter
+float x_test_filtered_buffer;       //buffer for the filtered test signal delay samples
+
+int data_flag = 0;         //UART data received flag
+char data = 'a';            //keyboard data (a = ANC mode) or (p = passthrough mode)
+
+float w[N];             //buffer weights of adapt filter
+
+float track_result = 0.0;
 
 interrupt void Codec_ISR()
 ///////////////////////////////////////////////////////////////////////
@@ -70,33 +76,55 @@ interrupt void Codec_ISR()
  	CodecDataIn.UINT = ReadCodecData();		// get input data samples
 
 	//Use the next line to noise test the filter
-	x_R_buffer[0] = CodecDataIn.Channel[LEFT];
-	x_E_buffer[0] = CodecDataIn.Channel[RIGHT];
+	x_test_buffer[0] = (float) CodecDataIn.Channel[LEFT];           // send test signal to Left Channel
+	x_test_filtered_buffer = (float) CodecDataIn.Channel[RIGHT];    // send filtered test signal to Right Channel
 
 	// ANC mode: use adaptive filter to produce anti-noise
 	if (data == 'a' || data == 0){
-	    for (i = N-1; i>= 0; i--)       // calculate out of adaptive filt, updates weights and delays
+	    for (i = 0; i< N; i++)
+	        result += (w[i] * x_test_buffer[i]);    // y(n) = w(n) * r(n)
+
+	    track_result = result;
+
+	    x_E_buffer[0] = x_test_filtered_buffer - result;  // e(n) = s(n) + y(n)
+
+	    for (i = 0; i<N; i++)
 	    {
-	        result += (w[i] * x_R_buffer[i]);
-	        w[i] = alpha * w[i] + beta*x_R_buffer[0]*x_E_buffer[i];     //update weights with leaky algorithm
-	        x_R_buffer[i] = x_R_buffer[i-1];            //update reference delay samples
-	        x_E_buffer[i] = x_E_buffer[i-1];            //update error delay samples
+	        beta += (x_test_buffer[i]*x_test_buffer[i]);
 	    }
+
+	    beta = 1/beta;
+
+	    for (i = N-1; i> 0; i--)       // calculate out of adaptive filt, updates weights and delays
+	    {
+	        w[i] = alpha * w[i] + beta*x_test_buffer[i]*x_E_buffer[0];     //update weights with leaky algorithm
+	        x_test_buffer[i] = x_test_buffer[i-1];            //update reference delay samples
+	        //x_E_buffer[i] = x_E_buffer[i-1];            //update error delay samples
+	    }
+	    w[0] = alpha * w[0] + beta*x_test_buffer[0]*x_E_buffer[0];
 	}
 	// passthrough mode: pass input sample directly to output
 	else if(data == 'p'){
-	    result = x_R_buffer[0];
-
+	    //result = x_test_buffer[0];
+	    x_E_buffer[0] = x_test_filtered_buffer;
 	}
 	//Return 16-bit sample to DAC
-	CodecDataOut.Channel[LEFT] = (short) result;
+	//CodecDataOut.Channel[LEFT] = (short) x_test_filtered_buffer;     // outputs y(n) (change 'result' to 'x_E' for error)
+	CodecDataOut.Channel[LEFT] = (short) x_E_buffer[0];
 
 	// Copy Right input directly to Right output with no filtering
-	// CodecDataOut.Channel[RIGHT] = (short) resultR;
+	//CodecDataOut.Channel[RIGHT] = 0;
 	/* end your code here */
+
 
 	WriteCodecData(CodecDataOut.UINT);		// send output data to  port
 //	WriteDigitalOutputs(0); // Write to GPIO J15, pin 6; end ISR timing pulse
+
+	/*char buffer[20];
+	itoa(x_test_buffer[0],buffer,10);
+	Puts_UART2(*buffer);
+	*/
+
 }
 
 //White noise generator for filter noise testing

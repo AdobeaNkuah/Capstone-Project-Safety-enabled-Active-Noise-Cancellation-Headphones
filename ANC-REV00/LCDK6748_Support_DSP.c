@@ -770,10 +770,10 @@ void Init_McASP0()
     mcasp->amute      = 0x00000000; 	// not used
 
     // start clocks
-//    mcasp->rgblctl |= GBLCTL_RHCLKRST;                         
-//    while(!(mcasp->rgblctl & GBLCTL_RHCLKRST));
-//    mcasp->xgblctl |= GBLCTL_XHCLKRST;  
-//    while(!(mcasp->xgblctl & GBLCTL_XHCLKRST));
+    //mcasp->rgblctl |= GBLCTL_RHCLKRST;
+    //while(!(mcasp->rgblctl & GBLCTL_RHCLKRST));
+    //mcasp->xgblctl |= GBLCTL_XHCLKRST;
+    //while(!(mcasp->xgblctl & GBLCTL_XHCLKRST));
     mcasp->rgblctl |= GBLCTL_RCLKRST;  
     while(!(mcasp->rgblctl & GBLCTL_RCLKRST));
 	mcasp->xgblctl |= GBLCTL_XCLKRST;                     

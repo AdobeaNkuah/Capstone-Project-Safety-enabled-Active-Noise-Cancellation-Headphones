@@ -19,6 +19,8 @@
 enum {AIC3106Fs48kHz, AIC3106Fs96kHz, AIC3106Fs32kHz, AIC3106Fs24kHz, AIC3106Fs16kHz, AIC3106Fs12kHz, AIC3106Fs8kHz};
 // enumeration for WriteLEDs
 enum {USER_LED1=2, USER_LED2 = 1};
+// enumeration for CodecType
+enum {LCDK_LineInput, LCDK_MicInput_0db, LCDK_MicInput_20db};
 
 // defined in OMAPL138_Support_DSP.c
 float  GetSampleFreq();

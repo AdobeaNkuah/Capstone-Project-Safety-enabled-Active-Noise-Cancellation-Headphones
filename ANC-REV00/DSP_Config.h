@@ -13,6 +13,8 @@
 
 #include "OMAPL138_Support_DSP.h"  
 
+#define DEMO 0    // '0' for ANC demo, '1' for sound recognition demo
+
 // uncomment just the line for the sample rate when using the OMAP-L138
 //#define SampleRateSetting 		AIC3106Fs48kHz		// 48kHz sample rate
 //#define SampleRateSetting 		AIC3106Fs96kHz		// 96kHz sample rate
@@ -22,6 +24,14 @@
 //#define SampleRateSetting 		AIC3106Fs12kHz		// 12kHz sample rate
 //#define SampleRateSetting 		AIC3106Fs8kHz		//  8kHz sample rate
 
+#if DEMO == 0
+    #define CodecType   0
+
+#elif DEMO == 1
+    #define SampleRateSetting         AIC3106Fs48kHz      // 48kHz sample rate
+    #define CodecType   2
+
+#endif
 
 
 #endif

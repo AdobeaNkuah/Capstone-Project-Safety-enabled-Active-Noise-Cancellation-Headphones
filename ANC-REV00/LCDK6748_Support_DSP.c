@@ -524,7 +524,7 @@ Uint32 Init_AIC3106(Uint8 nFs)
 	if(!AIC3106_write_reg(AIC3106_REG0_SERIAL_DATA_INTFC_C, 0x00))	// no offset
 		return 0;
 
-#if CodecType == LCDK_LineInput
+#if CodecType == 0
 	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x00))			// PGA gain=0db
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_RIGHT_ADC_PGA, 0x00))		// PGA gain=0db
@@ -539,7 +539,7 @@ Uint32 Init_AIC3106(Uint8 nFs)
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_MICBIAS, 0x00))				// mic bias off
 		return 0;
-#elif CodecType == LCDK_MicInput_0db
+#elif CodecType == 1
 	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x00))			// PGA gain=0db
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_RIGHT_ADC_PGA, 0x00))		// PGA gain=0db
@@ -554,10 +554,10 @@ Uint32 Init_AIC3106(Uint8 nFs)
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_MICBIAS, 0x80))				// mic bias to 2.5V
 		return 0;
-#elif CodecType == LCDK_MicInput_20db
-	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x28))			// PGA gain=20db
+#elif CodecType == 2
+	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x50))			// PGA gain=20db
 		return 0;
-	if(!AIC3106_write_reg(AIC3106_REG0_RIGHT_ADC_PGA, 0x28))		// PGA gain=20db
+	if(!AIC3106_write_reg(AIC3106_REG0_RIGHT_ADC_PGA, 0x50))		// PGA gain=20db
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_LINE1L_LEFT_ADC, 0x7C))		// input 1 off, ADC powered up
 		return 0;

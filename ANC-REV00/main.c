@@ -13,7 +13,7 @@
 int main()
 {    
 
-	// call StartUp for application specific code
+	// call StartUp for application specific codec
 	// defined in each application directory
 	StartUp();
 	

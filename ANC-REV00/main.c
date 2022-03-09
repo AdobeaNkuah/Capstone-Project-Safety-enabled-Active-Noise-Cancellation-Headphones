@@ -12,12 +12,7 @@
 
 int main()
 {    
-	
-	// initialize DSP board
-  	DSP_Init();
-
-	// call StartUp for application specific code
-	// defined in each application directory
+	//initialize DSP board and ANC parameters
 	StartUp();
 	
 	// main stalls here, interrupts drive operation 

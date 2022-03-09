@@ -524,7 +524,7 @@ Uint32 Init_AIC3106(Uint8 nFs)
 	if(!AIC3106_write_reg(AIC3106_REG0_SERIAL_DATA_INTFC_C, 0x00))	// no offset
 		return 0;
 
-#if CodecType == LCDK_LineInput
+/*#if CodecType == LCDK_LineInput
 	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x00))			// PGA gain=0db
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_RIGHT_ADC_PGA, 0x00))		// PGA gain=0db
@@ -540,6 +540,7 @@ Uint32 Init_AIC3106(Uint8 nFs)
 	if(!AIC3106_write_reg(AIC3106_REG0_MICBIAS, 0x00))				// mic bias off
 		return 0;
 #elif CodecType == LCDK_MicInput_0db
+*/
 	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x00))			// PGA gain=0db
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_RIGHT_ADC_PGA, 0x00))		// PGA gain=0db
@@ -554,6 +555,7 @@ Uint32 Init_AIC3106(Uint8 nFs)
 		return 0;
 	if(!AIC3106_write_reg(AIC3106_REG0_MICBIAS, 0x80))				// mic bias to 2.5V
 		return 0;
+	/*
 #elif CodecType == LCDK_MicInput_20db
 	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_ADC_PGA, 0x28))			// PGA gain=20db
 		return 0;
@@ -572,6 +574,7 @@ Uint32 Init_AIC3106(Uint8 nFs)
 #else
 #error Invalid CodecType set - check DSP_Config.h
 #endif
+*/
 
 	if(!AIC3106_write_reg(AIC3106_REG0_LEFT_AGC_CNTL_A, 0x00))		// agc disabled
 		return 0;
